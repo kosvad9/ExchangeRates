@@ -1,1 +1,12 @@
-spring.application.name=ExchangeRates
+spring:
+  application:
+    name: ExchangeRates
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+  h2:
+    console:
+      enabled: true
+  data:
+    jdbc:
+      dialect: h2
