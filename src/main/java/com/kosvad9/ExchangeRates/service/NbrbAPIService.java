@@ -38,20 +38,19 @@ public class NbrbAPIService {
         //принимать одно из двух значений (но не одновременно два) пришлось сделать два uri
         //и дважды делать запрос
         if (date == null) date = LocalDate.now();
+        var uriBuilder = UriComponentsBuilder.fromHttpUrl(nbrbRatesURL)
+                .queryParam("ondate","{ondate}")
+                .queryParam("periodicity", "{periodicity}");
         List<URI> uries = new ArrayList<>();
         uries.add(
-                UriComponentsBuilder.fromHttpUrl(nbrbRatesURL)
-                .queryParam("ondate","{ondate}")
-                .queryParam("periodicity", "{periodicity}")
+                uriBuilder
                 .buildAndExpand(dateFormatter.format(date), "0")
                 .toUri()
         );
         uries.add(
-                UriComponentsBuilder.fromHttpUrl(nbrbRatesURL)
-                        .queryParam("ondate","{ondate}")
-                        .queryParam("periodicity", "{periodicity}")
-                        .buildAndExpand(dateFormatter.format(date), "1")
-                        .toUri()
+                uriBuilder
+                .buildAndExpand(dateFormatter.format(date), "1")
+                .toUri()
         );
         return uries.stream()
                 .map(uri -> {
