@@ -1,6 +1,6 @@
 package com.kosvad9.ExchangeRates.controller;
 
-import com.kosvad9.ExchangeRates.dto.RateDto;
+import com.kosvad9.ExchangeRates.dto.CurrencyRateDto;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -14,8 +14,8 @@ public class RateController {
     }
 
     @GetMapping("/{currencyCode}")
-    public RateDto getCurrencyRate(@PathVariable String currencyCode,
-                                   @RequestParam LocalDate date){
+    public CurrencyRateDto getCurrencyRate(@PathVariable String currencyCode,
+                                           @RequestParam LocalDate date){
         return null;
     }
 }
