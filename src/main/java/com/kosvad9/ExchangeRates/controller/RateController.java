@@ -1,21 +1,29 @@
 package com.kosvad9.ExchangeRates.controller;
 
 import com.kosvad9.ExchangeRates.dto.CurrencyRateDto;
+import com.kosvad9.ExchangeRates.service.RateService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/rates")
 public class RateController {
+    private final RateService rateService;
     @GetMapping
-    public Boolean loadExchangeRates(@RequestParam LocalDate date){
-        return false;
+    public ResponseEntity<String> loadExchangeRates(@RequestParam @Nullable LocalDate date){
+        rateService.loadExchangeRates(date);
+        return new ResponseEntity<>("Успешно загружено!", HttpStatus.OK);
     }
 
-    @GetMapping("/{currencyCode}")
-    public CurrencyRateDto getCurrencyRate(@PathVariable String currencyCode,
-                                           @RequestParam LocalDate date){
-        return null;
+    @GetMapping("/{curAbbreviation}")
+    public CurrencyRateDto getCurrencyRate(@PathVariable String curAbbreviation,
+                                           @RequestParam @Nullable LocalDate date){
+        return rateService.getCurrencyRate(date, curAbbreviation);
     }
 }
