@@ -1,3 +1,6 @@
+nbrb:
+  api:
+    ratesUrl: https://api.nbrb.by/exrates/rates
 spring:
   application:
     name: ExchangeRates
