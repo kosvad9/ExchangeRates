@@ -1,22 +1,18 @@
 package com.kosvad9.ExchangeRates.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kosvad9.ExchangeRates.dto.NBRBRateDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.format.datetime.DateFormatter;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -54,9 +50,12 @@ public class NbrbAPIService {
         );
         return uries.stream()
                 .map(uri -> {
-                    var responseEntity = restTemplate.getForEntity(uri, NBRBRateDto[].class);
-                    if (responseEntity.getStatusCode() != HttpStatus.OK)
-                        throw new RuntimeException("Не были получены данные от API НБ РБ");
+                    ResponseEntity<NBRBRateDto[]> responseEntity;
+                    try {
+                        responseEntity = restTemplate.getForEntity(uri, NBRBRateDto[].class);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Не удалось получить данные из НБ РБ");
+                    }
                     return responseEntity.getBody();
                 })
                 .filter(Objects::nonNull)
@@ -72,9 +71,12 @@ public class NbrbAPIService {
                 .queryParam("parammode", "{parammode}")
                 .buildAndExpand(dateFormatter.format(date), "2")
                 .toUri();
-        var responseEntity = restTemplate.getForEntity(uri, NBRBRateDto.class);
-        if (responseEntity.getStatusCode() != HttpStatus.OK)
-            throw new RuntimeException("Не были получены данные от API НБ РБ");
+        ResponseEntity<NBRBRateDto> responseEntity;
+        try {
+            responseEntity = restTemplate.getForEntity(uri, NBRBRateDto.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Не удалось получить данные из НБ РБ");
+        }
         return responseEntity.getBody();
     }
 }
