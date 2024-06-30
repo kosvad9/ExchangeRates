@@ -43,7 +43,8 @@ public class RateService {
     public CurrencyRateDto getCurrencyRate(LocalDate date, String curAbbreviation){
         //метод выполняет поиск курса валюты в БД
         //а в случае отсутствия в БД данных делает запрос к API НБ РБ
-        Optional<Rate> rate = rateRepository.findByDateAndCurAbbreviation(date, curAbbreviation);
+        if (date == null) date = LocalDate.now();
+        Optional<Rate> rate = rateRepository.findByDateAndCurAbbreviationIgnoreCase(date, curAbbreviation);
         if (rate.isPresent())
             return rate.map(rate_to_CurrencyRateDto_Mapper::map).get();
         else
